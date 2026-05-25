@@ -1,0 +1,6 @@
+gwpy
+gwosc
+numpy
+torch
+scipy
+matplotlib
