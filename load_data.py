@@ -9,18 +9,19 @@ from gwosc import datasets
 # print(strain_data)
 
 def load_o3_strain(event_name:str, detector:str, duration_sec:float):
-    if(duration_sec <= 0):
+    if duration_sec <= 0:
         raise ValueError("Duration must be a positive number.")
+
     gps_center = event_gps(event=event_name)
+    start_gps = gps_center - (duration_sec / 2)
+    end_gps = gps_center + (duration_sec / 2)
 
-    start_gps = gps_center - (duration_sec/2)
-    end_gps = gps_center + (duration_sec/2)
-
-    if (detector not in ['H1', 'L1', 'V1']):
+    if detector not in ["H1", "L1", "V1"]:
         raise ValueError("Invalid detector. Please choose from 'H1', 'L1', 'V1'.")
-    
-    strain_data = TimeSeries.fetch_open_data(detector, start=start_gps, end=end_gps, cache=True)
 
+    strain_data = TimeSeries.fetch_open_data(
+        detector, start=start_gps, end=end_gps, cache=True
+    )
     strain_data = strain_data.resample(2048)
 
     sample_rate = strain_data.sample_rate.value
