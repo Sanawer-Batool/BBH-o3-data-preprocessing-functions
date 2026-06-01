@@ -21,7 +21,7 @@ def compute_psd(signal:NDArray[np.float64],
     )
 
     # Hann window 
-    window = np.hanning(nperseg)
+    window = np.hanning(nperseg) # np.hann -> new version in numpy
 
     power_array = []
 
@@ -56,6 +56,8 @@ def compute_psd(signal:NDArray[np.float64],
     print(f"PSD at 100 Hz: {psd[idx_100hz]:.6e}")
 
     print(f"Total frequency bins: {len(freqs)}")
+
+    print(f"Window duration: {fft_duration}s, Overlap: {overlap_dur}s, Stride: {nstride} samples")
 
     return(
         {
