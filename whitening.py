@@ -31,15 +31,23 @@ def whiten(
 
     # Go back to time domain with inverse FFT
     whitened = np.fft.irfft(H_whitened, n = len(signal))
+    if not np.all(np.isfinite(whitened)):
+        raise ValueError("Whitened signal contains NaN or Inf — check PSD values.")
 
     # Crop the edges
     pad = int(0.5 * sample_rate)
+    if 2 * pad >= len(whitened):
+        raise ValueError(
+            f"Signal too short to crop: {len(signal)} samples, pad={pad}. "
+            f"Increase duration_sec in load_o3_strain."
+    )
     whitened = whitened[pad : -pad]
 
     print(f"Length of signal before cropping: {len(signal)}")
     print(f"Length of signal after cropping: {len(whitened)}")
     print(f"Mean of whitened signal: {np.mean(whitened)}")
     print(f"Std of whitened signal: {np.std(whitened)}")
+    print(f"Edge crop: {pad} samples ({pad/sample_rate:.2f}s) removed from each side")
 
     return(
         {
