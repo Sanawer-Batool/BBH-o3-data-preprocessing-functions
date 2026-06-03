@@ -17,6 +17,11 @@ def bandpass_filter(
     if not (0 < low_norm < 1) or not (0 < high_norm < 1):
         raise ValueError(f"Normalised frequencies must be strictly between 0 and 1. Got low={low_norm:.4f}, high={high_norm:.4f}")
     
+    if low_norm >= high_norm:
+        raise ValueError(
+            f"lowcut_hz ({lowcut_hz}) must be less than highcut_hz ({highcut_hz})."
+    )
+
     b, a = butter(order, [low_norm, high_norm], btype="band") # btype='band' means bandpass (keep frequencies between low and high)
 
     filtered = filtfilt(b, a, signal)
